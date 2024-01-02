@@ -41,7 +41,7 @@ grav = 5 -- p/s/s
 accelx = 5 -- p/s/s
 termvelx = 25
 termvely = 50
-cooldown_time = 0.1 -- 10 bullets each second
+cooldown_time = 0.2 -- 10 bullets each second
 
 bullets = {}
 bullet_speed_x = 9
@@ -49,6 +49,8 @@ bullet_speed_x = 9
 blips = {}
 
 function love.load()
+  love.window.setMode(0, 0, {fullscreen=true})
+
   chopperimg = love.graphics.newImage("chopper.png")
   choppermid = chopperimg:getWidth() / 2
 
