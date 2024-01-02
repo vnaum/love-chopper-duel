@@ -7,6 +7,25 @@ function inverseLerp(a, b, x)
   return (x-a)/(b-a)
 end
 
+-- Generate a random bright RGB color
+local function generateRandomColor()
+  local r = math.random(0, 255)
+  local g = math.random(0, 255)
+  local b = math.random(0, 255)
+
+  -- Ensure the color is bright
+  local brightness = (r + g + b) / 3
+  if brightness < 128 then
+    -- Increase the brightness by adding a random value
+    local increase = math.random(0, 127)
+    r = math.min(r + increase, 255)
+    g = math.min(g + increase, 255)
+    b = math.min(b + increase, 255)
+  end
+
+  return r, g, b
+end
+
 function limit(val, absmax)
   if val > absmax then
     return absbax
@@ -75,14 +94,6 @@ function love.load()
   player.control = { left="left", right="right", up = "up", fire = "rctrl" }
 
   table.insert(players, player)
-
-  local bullet = {}
-  bullet.x = 220
-  bullet.y = 100
-  bullet.sx = 9
-  bullet.sy = 0
-  bullet.color = { love.math.colorFromBytes(200, 10, 10) }
-  table.insert(bullets, bullet)
 end
 
 function love.update(dt)
@@ -130,7 +141,8 @@ function love.update(dt)
       bullet.y = player.y
       bullet.sx = player.sx + bullet_speed_x * player.dir
       bullet.sy = player.sy
-      bullet.color = player.color
+      -- bullet.color = player.color
+      bullet.color = { love.math.colorFromBytes(generateRandomColor()) }
       table.insert(bullets, bullet)
 
       player.cooldown_left = cooldown_time
@@ -157,19 +169,17 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.print('sx: '.. players[1].sx)
+  -- love.graphics.print('sx: '.. players[1].sx)
 
   for i, player in ipairs(players) do
-    love.graphics.push()
     love.graphics.setColor(player.color)
     love.graphics.draw(chopperimg, player.x, player.y, 0, player.dir, 1, choppermid, choppermid)
-    love.graphics.pop()
+    love.graphics.reset()
   end
 
   for i, bullet in ipairs(bullets) do
-    love.graphics.push()
     love.graphics.setColor(bullet.color)
     love.graphics.draw(bulletimg, bullet.x, bullet.y, 0, bullet.dir, 1, bulletmid, bulletmid)
-    love.graphics.pop()
+    love.graphics.reset()
   end
 end
